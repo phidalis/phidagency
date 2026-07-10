@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhidAgency - Booking</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body data-page="booking">
+
+  <!-- NAVBAR 1 -->
+  <div class="navbar-1">
+    <p>&#128197; Book a Session &mdash; Schedule Your Consultation Today</p>
+  </div>
+
+  <!-- NAVBAR 2 -->
+  <nav class="navbar-2">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">P</div>
+        PhidAgency
+      </a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <button>&#128269;</button>
+      </div>
+      <div class="nav-actions">
+        <div style="position:relative;">
+          <button class="cog-btn" title="Settings">&#9881;</button>
+          <div class="theme-dropdown">
+            <button class="theme-option active" data-theme="light">
+              <span class="theme-dot light"></span> Light Mode
+            </button>
+            <button class="theme-option" data-theme="dark">
+              <span class="theme-dot dark"></span> Dark Mode
+            </button>
+            <button class="theme-option" data-theme="warm">
+              <span class="theme-dot warm"></span> Warm Mode
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- NAVBAR 3 -->
+  <nav class="navbar-3">
+    <div class="container">
+      <button class="hamburger">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="contacts.html">Contact</a>
+        <a href="booking.html" class="active">Booking</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE TITLE -->
+  <div class="page-title">
+    <h1>Book a Session</h1>
+    <p>Schedule a consultation and let's bring your vision to life</p>
+  </div>
+
+  <!-- BOOKING SECTION -->
+  <section class="section">
+    <div class="container">
+      <div class="booking-grid">
+
+        <!-- BOOKING FORM -->
+        <div>
+          <div class="section-title" style="text-align:left;margin-bottom:30px;">
+            <h2>Make a Booking</h2>
+            <p>Fill in the details below to schedule your session</p>
+          </div>
+          <form onsubmit="handleBookingSubmit(event)">
+            <div class="grid-2">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="Your full name" required>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="your@email.com" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="+1 (555) 123-4567" required>
+            </div>
+            <div class="form-group">
+              <label>Service</label>
+              <select name="service" required>
+                <option value="">Select a service</option>
+                <option value="Web Development">Web Development</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Mobile App Development">Mobile App Development</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+                <option value="SEO Optimization">SEO Optimization</option>
+                <option value="Brand Identity">Brand Identity</option>
+                <option value="Consulting">Consulting</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Preferred Date</label>
+              <input type="date" name="date" required>
+            </div>
+            <div class="form-group">
+              <label>Preferred Time</label>
+              <div class="time-slots">
+                <div class="time-slot" onclick="selectTimeSlot(this)">09:00 AM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">10:00 AM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">11:00 AM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">12:00 PM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">01:00 PM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">02:00 PM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">03:00 PM</div>
+                <div class="time-slot" onclick="selectTimeSlot(this)">04:00 PM</div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Additional Notes</label>
+              <textarea name="message" placeholder="Tell us about your project or any special requirements..." rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;">Confirm Booking</button>
+          </form>
+        </div>
+
+        <!-- BOOKING INFO & SOCIAL -->
+        <div>
+          <div class="booking-info" style="margin-bottom:30px;">
+            <h3 data-booking="booking_title">Why Book With Us?</h3>
+            <div class="booking-info-item">
+              <div class="icon"><i class="fas fa-handshake"></i></div>
+              <div>
+                <h4 data-booking="booking_item1_title">Free Consultation</h4>
+                <p data-booking="booking_item1_desc">Start with a free 30-minute consultation to discuss your needs.</p>
+              </div>
+            </div>
+            <div class="booking-info-item">
+              <div class="icon"><i class="fas fa-dollar-sign"></i></div>
+              <div>
+                <h4 data-booking="booking_item2_title">Transparent Pricing</h4>
+                <p data-booking="booking_item2_desc">No hidden fees. Get a clear quote before we start.</p>
+              </div>
+            </div>
+            <div class="booking-info-item">
+              <div class="icon"><i class="fas fa-clock"></i></div>
+              <div>
+                <h4 data-booking="booking_item3_title">Quick Response</h4>
+                <p data-booking="booking_item3_desc">We respond to all booking requests within 24 hours.</p>
+              </div>
+            </div>
+            <div class="booking-info-item">
+              <div class="icon"><i class="fas fa-lock"></i></div>
+              <div>
+                <h4 data-booking="booking_item4_title">Confidential</h4>
+                <p data-booking="booking_item4_desc">Your project details are kept strictly confidential.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="booking-info">
+            <h3>Connect With Us</h3>
+            <p>Follow us on social media for updates, tips, and inspiration.</p>
+            <div class="social-links" style="margin-top:20px;">
+              <a href="#" title="Facebook" style="width:48px;height:48px;font-size:1.3rem;" data-social="social_facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" title="Twitter / X" style="width:48px;height:48px;font-size:1.3rem;" data-social="social_twitter"><i class="fab fa-x-twitter"></i></a>
+              <a href="#" title="Instagram" style="width:48px;height:48px;font-size:1.3rem;" data-social="social_instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" title="LinkedIn" style="width:48px;height:48px;font-size:1.3rem;" data-social="social_linkedin"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#" title="YouTube" style="width:48px;height:48px;font-size:1.3rem;" data-social="social_youtube"><i class="fab fa-youtube"></i></a>
+              <a href="#" title="TikTok" style="width:48px;height:48px;font-size:1.3rem;" data-social="social_tiktok"><i class="fab fa-tiktok"></i></a>
+            </div>
+            <div style="margin-top:20px;">
+              <p><strong>Email:</strong> <a data-contact="contact_email">info@phidagency.com</a></p>
+              <p><strong>Phone:</strong> <span data-contact="contact_phone">+1 (555) 123-4567</span></p>
+              <p><strong>Hours:</strong> <span data-booking="booking_hours">Mon - Fri, 9:00 AM - 5:00 PM</span></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>PhidAgency</h3>
+          <p>We are a full-service digital agency specializing in web development, design, and creative solutions. Let us help you build something extraordinary.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook" data-social="social_facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Twitter / X" data-social="social_twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" title="Instagram" data-social="social_instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="LinkedIn" data-social="social_linkedin"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" title="TikTok" data-social="social_tiktok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="blogs.html">Blogs</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="booking.html">Web Development</a></li>
+            <li><a href="booking.html">UI/UX Design</a></li>
+            <li><a href="booking.html">Digital Marketing</a></li>
+            <li><a href="booking.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <ul>
+            <li><a href="mailto:info@phidagency.com" data-contact="contact_email">info@phidagency.com</a></li>
+            <li><a href="contacts.html">Contact Form</a></li>
+            <li><a href="booking.html">Book a Session</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span class="footer-year">2026</span> PhidAgency. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

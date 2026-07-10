@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhidAgency - Contact Us</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body data-page="contacts">
+
+  <!-- NAVBAR 1 -->
+  <div class="navbar-1">
+    <p>&#128222; Let's Connect &mdash; We'd Love to Hear From You</p>
+  </div>
+
+  <!-- NAVBAR 2 -->
+  <nav class="navbar-2">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">P</div>
+        PhidAgency
+      </a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search...">
+        <button>&#128269;</button>
+      </div>
+      <div class="nav-actions">
+        <div style="position:relative;">
+          <button class="cog-btn" title="Settings">&#9881;</button>
+          <div class="theme-dropdown">
+            <button class="theme-option active" data-theme="light">
+              <span class="theme-dot light"></span> Light Mode
+            </button>
+            <button class="theme-option" data-theme="dark">
+              <span class="theme-dot dark"></span> Dark Mode
+            </button>
+            <button class="theme-option" data-theme="warm">
+              <span class="theme-dot warm"></span> Warm Mode
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- NAVBAR 3 -->
+  <nav class="navbar-3">
+    <div class="container">
+      <button class="hamburger">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="contacts.html" class="active">Contact</a>
+        <a href="booking.html">Booking</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE TITLE -->
+  <div class="page-title">
+    <h1>Contact Us</h1>
+    <p>Have a question or want to work together? Reach out to us.</p>
+  </div>
+
+  <!-- CONTACT CARDS -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-cards">
+        <div class="contact-card">
+          <div class="icon"><i class="fas fa-envelope"></i></div>
+          <h4>Email Us</h4>
+          <p data-contact="contact_email">info@phidagency.com</p>
+        </div>
+        <div class="contact-card">
+          <div class="icon"><i class="fas fa-phone"></i></div>
+          <h4>Call Us</h4>
+          <p data-contact="contact_phone">+1 (555) 123-4567</p>
+        </div>
+        <div class="contact-card">
+          <div class="icon"><i class="fas fa-location-dot"></i></div>
+          <h4>Visit Us</h4>
+          <p data-contact="contact_address">123 Digital Street, Tech City</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section class="section section-alt">
+    <div class="container">
+      <div class="section-title">
+        <h2>Send Us a Message</h2>
+        <p>Fill out the form below and we'll get back to you soon</p>
+        <div class="underline"></div>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        <form onsubmit="handleContactSubmit(event)">
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Your Name</label>
+              <input type="text" name="name" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label>Your Email</label>
+              <input type="email" name="email" placeholder="john@example.com" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Subject</label>
+            <input type="text" name="subject" placeholder="How can we help?" required>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea name="message" placeholder="Tell us about your project or question..." rows="6" required></textarea>
+          </div>
+          <button type="submit" class="btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>PhidAgency</h3>
+          <p>We are a full-service digital agency specializing in web development, design, and creative solutions. Let us help you build something extraordinary.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook" data-social="social_facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Twitter / X" data-social="social_twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" title="Instagram" data-social="social_instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="LinkedIn" data-social="social_linkedin"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" title="TikTok" data-social="social_tiktok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="blogs.html">Blogs</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="booking.html">Web Development</a></li>
+            <li><a href="booking.html">UI/UX Design</a></li>
+            <li><a href="booking.html">Digital Marketing</a></li>
+            <li><a href="booking.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <ul>
+            <li><a href="mailto:info@phidagency.com" data-contact="contact_email">info@phidagency.com</a></li>
+            <li><a href="contacts.html">Contact Form</a></li>
+            <li><a href="booking.html">Book a Session</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span class="footer-year">2026</span> PhidAgency. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

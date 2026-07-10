@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhidAgency - Projects</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body data-page="projects">
+
+  <!-- NAVBAR 1 -->
+  <div class="navbar-1">
+    <p>&#9889; Our Portfolio &mdash; Showcasing Our Best Work</p>
+  </div>
+
+  <!-- NAVBAR 2 -->
+  <nav class="navbar-2">
+    <div class="container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">P</div>
+        PhidAgency
+      </a>
+      <div class="search-bar">
+        <input type="text" placeholder="Search projects...">
+        <button>&#128269;</button>
+      </div>
+      <div class="nav-actions">
+        <div style="position:relative;">
+          <button class="cog-btn" title="Settings">&#9881;</button>
+          <div class="theme-dropdown">
+            <button class="theme-option active" data-theme="light">
+              <span class="theme-dot light"></span> Light Mode
+            </button>
+            <button class="theme-option" data-theme="dark">
+              <span class="theme-dot dark"></span> Dark Mode
+            </button>
+            <button class="theme-option" data-theme="warm">
+              <span class="theme-dot warm"></span> Warm Mode
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- NAVBAR 3 -->
+  <nav class="navbar-3">
+    <div class="container">
+      <button class="hamburger">&#9776;</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="blogs.html">Blogs</a>
+        <a href="about.html">About</a>
+        <a href="contacts.html">Contact</a>
+        <a href="booking.html">Booking</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE TITLE -->
+  <div class="page-title">
+    <h1>Our Projects</h1>
+    <p>Explore the work we've delivered for our clients</p>
+  </div>
+
+  <!-- PROJECTS GRID -->
+  <section class="section">
+    <div class="container">
+      <div id="projectsGrid" class="grid-4">
+        <!-- Projects loaded dynamically -->
+        <div class="loading-spinner"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECT IFRAME MODAL -->
+  <div id="projectModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="modalTitle">Project Preview</h4>
+        <button class="modal-close" onclick="closeProjectModal()">Close &#10005;</button>
+      </div>
+      <div class="modal-body">
+        <iframe id="projectIframe" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT DETAIL MODAL -->
+  <div id="detailModal" class="detail-overlay" onclick="if(event.target===this)closeDetailModal()">
+    <div class="detail-card">
+      <img id="detailImage" src="" alt="">
+      <div class="detail-body">
+        <h2 id="detailTitle"></h2>
+        <div class="detail-desc" id="detailDesc"></div>
+        <div class="detail-actions">
+          <button class="btn-primary" id="detailViewBtn" onclick="openProjectFromDetail()">View This Project</button>
+          <button class="btn-secondary" onclick="closeDetailModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3>PhidAgency</h3>
+          <p>We are a full-service digital agency specializing in web development, design, and creative solutions. Let us help you build something extraordinary.</p>
+          <div class="social-links">
+            <a href="#" title="Facebook" data-social="social_facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Twitter / X" data-social="social_twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" title="Instagram" data-social="social_instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="LinkedIn" data-social="social_linkedin"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" title="TikTok" data-social="social_tiktok"><i class="fab fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="blogs.html">Blogs</a></li>
+            <li><a href="about.html">About</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Services</h3>
+          <ul>
+            <li><a href="booking.html">Web Development</a></li>
+            <li><a href="booking.html">UI/UX Design</a></li>
+            <li><a href="booking.html">Digital Marketing</a></li>
+            <li><a href="booking.html">Consulting</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Contact</h3>
+          <ul>
+            <li><a href="mailto:info@phidagency.com" data-contact="contact_email">info@phidagency.com</a></li>
+            <li><a href="contacts.html">Contact Form</a></li>
+            <li><a href="booking.html">Book a Session</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; <span class="footer-year">2026</span> PhidAgency. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/main.js"></script>
+  <script>loadProjects();</script>
+</body>
+</html>
