@@ -1024,6 +1024,7 @@ p {
   border-bottom: 1px solid var(--border);
   font-size: 0.9rem;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .admin-table tr:last-child td {
@@ -1068,6 +1069,12 @@ p {
 
 .admin-panel {
   display: none;
+}
+
+.admin-form-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
 }
 
 .admin-panel.active {
@@ -1342,6 +1349,16 @@ p {
     width: 100%;
     text-align: center;
   }
+
+  .admin-form-table {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .admin-tab {
+    padding: 10px 12px;
+    font-size: 0.82rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1358,6 +1375,10 @@ p {
     height: 36px;
     font-size: 1rem;
   }
+
+  .admin-tab { padding: 8px 8px; font-size: 0.76rem; }
+  .admin-table th,
+  .admin-table td { padding: 8px 6px; font-size: 0.76rem; }
 }
 
 /* ---------- AUTH PAGES ---------- */
