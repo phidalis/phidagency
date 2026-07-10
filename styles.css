@@ -504,6 +504,33 @@ p {
   background: rgba(255,255,255,0.8);
 }
 
+.book-now-section {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--bg-secondary);
+}
+
+.book-now-btn {
+  display: inline-block;
+  padding: 16px 48px;
+  background: var(--gradient);
+  color: #fff;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+
+.book-now-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(67, 97, 238, 0.45);
+  color: #fff;
+}
+
 .hero-fallback {
   position: absolute;
   top: 0;
