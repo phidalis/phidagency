@@ -119,13 +119,222 @@ function initCog() {
   }
 }
 
-// ---------- ACTIVE NAV LINK ----------
-function setActiveNavLink() {
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    const href = link.getAttribute('href');
-    link.classList.toggle('active', href === currentPage);
+// ---------- SCROLL REVEAL ANIMATIONS ----------
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const delay = entry.target.dataset.delay || 0;
+        setTimeout(() => {
+          entry.target.classList.add('revealed');
+        }, parseInt(delay));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
   });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ---------- TYPED TEXT EFFECT ----------
+function initTypedText() {
+  const el = document.getElementById('typedText');
+  if (!el) return;
+
+  const phrases = [
+    'We Build Digital Empires',
+    'Innovation Meets Impact',
+    'Your Vision, Our Code',
+    'Crafting Tomorrow\'s Web'
+  ];
+
+  let phraseIndex = 0;
+  let charIndex = 0;
+  let isDeleting = false;
+  let typeSpeed = 80;
+
+  function type() {
+    const currentPhrase = phrases[phraseIndex];
+
+    if (isDeleting) {
+      el.textContent = currentPhrase.substring(0, charIndex - 1);
+      charIndex--;
+      typeSpeed = 40;
+    } else {
+      el.textContent = currentPhrase.substring(0, charIndex + 1);
+      charIndex++;
+      typeSpeed = 80;
+    }
+
+    if (!isDeleting && charIndex === currentPhrase.length) {
+      typeSpeed = 2500;
+      isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+      isDeleting = false;
+      phraseIndex = (phraseIndex + 1) % phrases.length;
+      typeSpeed = 400;
+    }
+
+    setTimeout(type, typeSpeed);
+  }
+
+  setTimeout(type, 800);
+}
+
+// ---------- ANIMATED COUNTERS ----------
+function initCounters() {
+  const counterElements = document.querySelectorAll('.stat-number');
+  if (counterElements.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counterElements.forEach(el => observer.observe(el));
+}
+
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const duration = 2000;
+  const start = performance.now();
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.floor(target * eased);
+    if (progress < 1) requestAnimationFrame(update);
+  }
+
+  requestAnimationFrame(update);
+}
+
+// ---------- PARTICLE CANVAS ----------
+function initParticles() {
+  const canvas = document.getElementById('heroParticles');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let animFrame;
+
+  function resize() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 2 + 0.5;
+      this.speedX = (Math.random() - 0.5) * 0.8;
+      this.speedY = (Math.random() - 0.5) * 0.8;
+      this.opacity = Math.random() * 0.5 + 0.1;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+
+      if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+      ctx.fill();
+    }
+  }
+
+  const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+  for (let i = 0; i < count; i++) {
+    particles.push(new Particle());
+  }
+
+  function connectParticles() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < 150) {
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(255, 255, 255, ${0.08 * (1 - dist / 150)})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    connectParticles();
+    animFrame = requestAnimationFrame(animate);
+  }
+
+  animate();
+
+  // Pause when not visible
+  const hero = document.getElementById('heroVideo');
+  if (hero) {
+    const visObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          if (!animFrame) animate();
+        } else {
+          cancelAnimationFrame(animFrame);
+          animFrame = null;
+        }
+      });
+    });
+    visObs.observe(hero);
+  }
+}
+
+// ---------- VIDEO FALLBACK ----------
+function initVideoHero() {
+  const video = document.getElementById('heroBgVideo');
+  if (!video) return;
+
+  video.addEventListener('error', () => {
+    video.style.display = 'none';
+  });
+
+  // Pause when not visible to save resources
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+      }
+    });
+  });
+  observer.observe(video);
 }
 
 // ---------- FOOTER YEAR ----------
@@ -146,6 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
   loadContactInfo();
   loadSocialLinks();
   loadBookingInfo();
+  initScrollReveal();
+  initTypedText();
+  initCounters();
+  initParticles();
+  initVideoHero();
 });
 
 // ---------- HERO SLIDESHOW ----------

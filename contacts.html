@@ -57,7 +57,7 @@
   </nav>
 
   <!-- PAGE TITLE -->
-  <div class="page-title">
+  <div class="page-title reveal">
     <h1>Contact Us</h1>
     <p>Have a question or want to work together? Reach out to us.</p>
   </div>
@@ -66,17 +66,17 @@
   <section class="section">
     <div class="container">
       <div class="contact-cards">
-        <div class="contact-card">
+        <div class="contact-card reveal" data-delay="0">
           <div class="icon"><i class="fas fa-envelope"></i></div>
           <h4>Email Us</h4>
           <p data-contact="contact_email">info@phidagency.com</p>
         </div>
-        <div class="contact-card">
+        <div class="contact-card reveal" data-delay="100">
           <div class="icon"><i class="fas fa-phone"></i></div>
           <h4>Call Us</h4>
           <p data-contact="contact_phone">+1 (555) 123-4567</p>
         </div>
-        <div class="contact-card">
+        <div class="contact-card reveal" data-delay="200">
           <div class="icon"><i class="fas fa-location-dot"></i></div>
           <h4>Visit Us</h4>
           <p data-contact="contact_address">123 Digital Street, Tech City</p>
@@ -88,12 +88,12 @@
   <!-- CONTACT FORM -->
   <section class="section section-alt">
     <div class="container">
-      <div class="section-title">
+      <div class="section-title reveal">
         <h2>Send Us a Message</h2>
         <p>Fill out the form below and we'll get back to you soon</p>
         <div class="underline"></div>
       </div>
-      <div style="max-width:700px;margin:0 auto;">
+      <div style="max-width:700px;margin:0 auto;" class="reveal">
         <form onsubmit="handleContactSubmit(event)">
           <div class="grid-2">
             <div class="form-group">
