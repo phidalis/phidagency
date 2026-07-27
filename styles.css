@@ -421,6 +421,11 @@ p {
   justify-content: center;
 }
 
+.hero-full {
+  height: 100vh;
+  min-height: 100vh;
+}
+
 .hero-slide {
   position: absolute;
   top: 0;
@@ -2010,6 +2015,11 @@ p {
     align-items: center;
   }
 
+  .hero-full {
+    height: 70vh;
+    min-height: 400px;
+  }
+
   .hero-scroll-indicator {
     display: none;
   }
@@ -2078,6 +2088,11 @@ p {
 }
 
 @media (max-width: 480px) {
+  .hero-full {
+    height: 60vh;
+    min-height: 320px;
+  }
+
   .hero-content h1 {
     font-size: 1.6rem;
   }

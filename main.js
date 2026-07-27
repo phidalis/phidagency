@@ -144,12 +144,10 @@ function initTypedText() {
   const el = document.getElementById('typedText');
   if (!el) return;
 
-  const phrases = [
-    'We Build Digital Empires',
-    'Innovation Meets Impact',
-    'Your Vision, Our Code',
-    'Crafting Tomorrow\'s Web'
-  ];
+  const page = document.body.dataset.page;
+  const phrases = page === 'blogs'
+    ? ['Insights & Ideas', 'Fresh Perspectives', 'Industry Trends', 'Expert Knowledge']
+    : ['We Build Digital Empires', 'Innovation Meets Impact', 'Your Vision, Our Code', 'Crafting Tomorrow\'s Web'];
 
   let phraseIndex = 0;
   let charIndex = 0;
