@@ -62,22 +62,13 @@ function showToast(message, type = 'success') {
   }, 3500);
 }
 
-// ---------- MOBILE NAV TOGGLE ----------
-function initMobileNav() {
-  const hamburger = document.querySelector('.hamburger');
-  const navLinks = document.querySelector('.nav-links');
-  if (hamburger && navLinks) {
-    hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-      hamburger.textContent = navLinks.classList.contains('active') ? '\u2715' : '\u2630';
-    });
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        hamburger.textContent = '\u2630';
-      });
-    });
-  }
+// ---------- ACTIVE NAV LINK ----------
+function setActiveNavLink() {
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    const href = link.getAttribute('href');
+    link.classList.toggle('active', href === currentPage);
+  });
 }
 
 // ---------- SEARCH ----------
@@ -147,7 +138,6 @@ function setFooterYear() {
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   initSupabase();
-  initMobileNav();
   initSearch();
   initCog();
   setActiveNavLink();
