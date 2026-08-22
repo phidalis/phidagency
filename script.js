@@ -1179,6 +1179,7 @@ let siteData = {
   projects: {},
   removed: [],
   customs: [],
+  featured: [],
 };
 let appsCache = [];
 let studioSitesCache = [];
@@ -1291,13 +1292,87 @@ function applyContent() {
         card.style.display = "none";
       }
       if (c.projects[title]) card.dataset.link = c.projects[title];
+      const img = card.querySelector(".card-thumb img");
+      if (img && card.dataset.link) img.src = previewUrl(card.dataset.link);
     }
   });
 
   renderCustomProjectCards();
+  renderFeatured();
 
   const preview = document.getElementById("ad-hero-preview");
   if (preview) preview.src = c.heroImg || "phidagency.png";
+}
+
+/* ---- featured projects carousel (home section) ---- */
+function allProjects() {
+  const c = getContent();
+  const list = [];
+  projectCards().forEach((card) => {
+    const title = card.querySelector("span")?.textContent.trim();
+    if (!title || (c.removed || []).includes(title)) return;
+    list.push({
+      id: "b:" + title,
+      title,
+      desc: card.querySelector(".card-desc")?.textContent.trim() || "",
+      link: c.projects[title] || card.dataset.link || "",
+    });
+  });
+  customProjects().forEach((p) => {
+    list.push({
+      id: "c:" + p.id,
+      title: p.title,
+      desc: p.desc || "",
+      link: p.link || "",
+    });
+  });
+  return list;
+}
+
+function featuredIds() {
+  return Array.isArray(getContent().featured) ? getContent().featured : [];
+}
+
+function renderFeatured() {
+  const track = document.getElementById("cards-track");
+  if (!track) return;
+  const ids = featuredIds();
+  let picks = allProjects().filter((p) => ids.includes(p.id));
+  if (!picks.length) picks = allProjects().slice(0, 5);
+  track.innerHTML = "";
+  picks.forEach((p) => {
+    const card = document.createElement("article");
+    card.className = "project-card";
+    if (p.link) card.dataset.link = p.link;
+    let thumb;
+    if (p.link) {
+      thumb =
+        '<div class="card-thumb"><img alt="' +
+        esc(p.title) +
+        ' preview" loading="lazy" src="' +
+        previewUrl(p.link) +
+        '" /></div>';
+    } else {
+      thumb =
+        '<div class="card-thumb"><span class="thumb-fallback">' +
+        esc((p.title || "?").slice(0, 2).toUpperCase()) +
+        "</span></div>";
+    }
+    card.innerHTML =
+      thumb +
+      "<h3>" +
+      esc(p.title) +
+      '</h3><p class="card-desc">' +
+      esc(p.desc) +
+      "</p>";
+    track.appendChild(card);
+  });
+  const more = document.createElement("a");
+  more.href = "#projects";
+  more.className = "project-card see-more-card";
+  more.innerHTML =
+    '<span>See More</span> <i class="fas fa-arrow-right"></i>';
+  track.appendChild(more);
 }
 
 /* ---- capture form submissions as applications (Firestore) ---- */
@@ -1470,13 +1545,6 @@ function projectCards() {
   return [...document.querySelectorAll(".project-item")];
 }
 
-const PROJ_ICONS = [
-  "fa-cart-shopping", "fa-utensils", "fa-chart-line", "fa-pen-nib",
-  "fa-plane", "fa-dumbbell", "fa-building", "fa-graduation-cap",
-  "fa-camera", "fa-music", "fa-gamepad", "fa-heart-pulse",
-  "fa-palette", "fa-code", "fa-store", "fa-paw",
-];
-
 function removedBuiltins() {
   return getContent().removed || [];
 }
@@ -1489,14 +1557,27 @@ function renderCustomProjectCards() {
   const grid = document.querySelector(".projects-grid");
   if (!grid) return;
   grid.querySelectorAll(".custom-project").forEach((el) => el.remove());
-  customProjects().forEach((p) => {
+  customProjects().forEach((p, i) => {
     const card = document.createElement("article");
     card.className = "project-item custom-project has-link";
     card.dataset.link = p.link;
+    let thumb;
+    if (p.link) {
+      thumb =
+        '<div class="card-thumb"><img alt="' +
+        esc(p.title) +
+        ' preview" loading="lazy" src="' +
+        previewUrl(p.link) +
+        '" /></div>';
+    } else {
+      thumb =
+        '<div class="card-thumb thumb-' + ((i % 8) + 1) + '"><span class="thumb-fallback">' +
+        esc((p.title || "?").slice(0, 2).toUpperCase()) +
+        "</span></div>";
+    }
     card.innerHTML =
-      '<div class="card-thumb thumb-1"><i class="fas ' +
-      esc(p.icon) +
-      '"></i></div><span>' +
+      thumb +
+      "<span>" +
       esc(p.title) +
       '</span><p class="card-desc">' +
       esc(p.desc) +
@@ -1509,102 +1590,167 @@ function renderCustomProjectCards() {
   });
 }
 
-function renderAdminProjects() {
-  const listEl = document.getElementById("admin-projects-list");
-  const c = getContent();
-  listEl.innerHTML = "";
+function previewUrl(link) {
+  return (
+    "https://s.wordpress.com/mshots/v1/" +
+    encodeURIComponent(link) +
+    "?w=640&h=560"
+  );
+}
 
-  // built-in projects (deletable, editable link)
-  projectCards().forEach((card) => {
-    const title = card.querySelector("span")?.textContent.trim();
-    if (!title) return;
-    if (listEl.querySelector('[data-title="' + title + '"]')) return;
-    const row = document.createElement("div");
-    row.className = "project-row";
-    row.dataset.title = title;
-    const label = document.createElement("span");
-    label.innerHTML = "<i class='fas fa-link'></i> " + esc(title);
-    const input = document.createElement("input");
-    input.type = "url";
-    input.placeholder = "https://your-live-project.com";
-    input.value = c.projects[title] || "";
-    const del = document.createElement("button");
-    del.className = "mini-btn danger";
-    del.innerHTML = '<i class="fas fa-trash"></i>';
-    del.title = "Hide this project from the site";
-    del.addEventListener("click", () => {
-      if (!confirm('Hide "' + title + '"?')) return;
+function toggleFeatured(id) {
+  const ids = featuredIds();
+  setContent({
+    ...getContent(),
+    featured: ids.includes(id) ? ids.filter((f) => f !== id) : [...ids, id],
+  });
+}
+
+function makeFeatBtn(id) {
+  const active = featuredIds().includes(id);
+  const feat = document.createElement("button");
+  feat.className = "mini-btn feat-toggle" + (active ? " active" : "");
+  feat.innerHTML = '<i class="fas fa-star"></i>';
+  feat.title = active
+    ? "Featured on the home section — click to remove"
+    : "Show this project in Featured Projects on the home section";
+  feat.addEventListener("click", () => {
+    toggleFeatured(id);
+    renderAdminProjects();
+  });
+  return feat;
+}
+
+function builtinRow(title) {
+  const c = getContent();
+  const isDeleted = removedBuiltins().includes(title);
+  const row = document.createElement("div");
+  row.className = "project-row" + (isDeleted ? " deleted" : "");
+  row.dataset.title = title;
+  const label = document.createElement("span");
+  label.innerHTML = "<i class='fas fa-link'></i> " + esc(title);
+  const input = document.createElement("input");
+  input.type = "url";
+  input.placeholder = "https://your-live-project.com";
+  input.value = c.projects[title] || "";
+  const del = document.createElement("button");
+  del.className = "mini-btn danger";
+  del.innerHTML = isDeleted
+    ? '<i class="fas fa-rotate-left"></i>'
+    : '<i class="fas fa-trash"></i>';
+  del.title = isDeleted
+    ? "Restore this project"
+    : "Delete this project from the site";
+  del.addEventListener("click", () => {
+    if (removedBuiltins().includes(title)) {
+      setContent({
+        ...getContent(),
+        removed: removedBuiltins().filter((t) => t !== title),
+      });
+    } else {
+      if (
+        !confirm(
+          'Delete "' +
+            title +
+            '" from the site? You can restore it here later.'
+        )
+      )
+        return;
       setContent({
         ...getContent(),
         removed: [...removedBuiltins(), title],
+        featured: featuredIds().filter((f) => f !== "b:" + title),
       });
-      renderAdminProjects();
+    }
+    applyContent();
+    renderAdminProjects();
+  });
+  row.append(label, input, makeFeatBtn("b:" + title), del);
+  return row;
+}
+
+function customRow(p) {
+  const row = document.createElement("div");
+  row.className = "project-row custom";
+  row.dataset.customId = p.id;
+  const label = document.createElement("span");
+  label.innerHTML = "<i class='fas fa-plus'></i> " + esc(p.title);
+  const input = document.createElement("input");
+  input.type = "url";
+  input.value = p.link;
+  input.placeholder = "https://...";
+  input.addEventListener("change", () => {
+    const all = customProjects();
+    const t = all.find((x) => x.id === p.id);
+    t.link = input.value.trim();
+    setContent({ ...getContent(), customs: all });
+    applyContent();
+  });
+  const del = document.createElement("button");
+  del.className = "mini-btn danger";
+  del.innerHTML = '<i class="fas fa-trash"></i>';
+  del.title = "Delete this project from Firestore permanently";
+  del.addEventListener("click", () => {
+    if (!confirm('Delete "' + p.title + '" permanently? This cannot be undone.'))
+      return;
+    setContent({
+      ...getContent(),
+      customs: customProjects().filter((x) => x.id !== p.id),
+      featured: featuredIds().filter((f) => f !== "c:" + p.id),
     });
-    row.append(label, input, del);
-    listEl.appendChild(row);
+    applyContent();
+    renderAdminProjects();
+  });
+  row.append(label, input, makeFeatBtn("c:" + p.id), del);
+  return row;
+}
+
+function renderAdminProjects() {
+  const listEl = document.getElementById("admin-projects-list");
+  listEl.innerHTML = "";
+
+  const builtins = [];
+  projectCards().forEach((card) => {
+    const title = card.querySelector("span")?.textContent.trim();
+    if (!title || listEl.querySelector('[data-title="' + title + '"]')) return;
+    builtins.push(title);
   });
 
-  // custom added projects
-  customProjects().forEach((p) => {
-    const row = document.createElement("div");
-    row.className = "project-row custom";
-    row.dataset.customId = p.id;
-    const label = document.createElement("span");
-    label.innerHTML =
-      "<i class='fas fa-star' style='color:#f59e0b'></i> " + esc(p.title);
-    const input = document.createElement("input");
-    input.type = "url";
-    input.value = p.link;
-    input.placeholder = "https://...";
-    input.addEventListener("change", () => {
-      const all = customProjects();
-      const t = all.find((x) => x.id === p.id);
-      t.link = input.value.trim();
-      setContent({ ...getContent(), customs: all });
-      applyContent();
-    });
-    const del = document.createElement("button");
-    del.className = "mini-btn danger";
-    del.innerHTML = '<i class="fas fa-trash"></i>';
-    del.title = "Delete this project permanently";
-    del.addEventListener("click", () => {
-      if (!confirm('Delete "' + p.title + '" permanently?')) return;
-      setContent({
-        ...getContent(),
-        customs: customProjects().filter((x) => x.id !== p.id),
-      });
-      applyContent();
-      renderAdminProjects();
-    });
-    row.append(label, input, del);
-    listEl.appendChild(row);
-  });
+  // active projects first
+  builtins
+    .filter((t) => !removedBuiltins().includes(t))
+    .forEach((t) => listEl.appendChild(builtinRow(t)));
+
+  // then custom added projects
+  customProjects().forEach((p) => listEl.appendChild(customRow(p)));
+
+  // deleted projects sink to the bottom of the list
+  const deleted = builtins.filter((t) => removedBuiltins().includes(t));
+  if (deleted.length) {
+    const divider = document.createElement("div");
+    divider.className = "deleted-divider";
+    divider.innerHTML =
+      '<i class="fas fa-trash"></i> Deleted — hidden from site';
+    listEl.appendChild(divider);
+    deleted.forEach((t) => listEl.appendChild(builtinRow(t)));
+  }
 }
 
 // add-new-project form
 const addProjForm = document.getElementById("add-project-form");
 
 if (addProjForm) {
-  const iconSel = document.getElementById("np-icon");
-  PROJ_ICONS.forEach((ic) => {
-    const opt = document.createElement("option");
-    opt.value = ic;
-    opt.textContent = ic.replace("fa-", "");
-    iconSel.appendChild(opt);
-  });
-
   addProjForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const title = document.getElementById("np-title").value.trim();
     const desc = document.getElementById("np-desc").value.trim();
     const link = document.getElementById("np-link").value.trim();
-    const icon = iconSel.value;
     if (!title) return;
     setContent({
       ...getContent(),
       customs: [
         ...customProjects(),
-        { id: Date.now().toString(36), title, desc, link, icon },
+        { id: Date.now().toString(36), title, desc, link },
       ],
     });
     addProjForm.reset();

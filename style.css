@@ -453,6 +453,21 @@ html, body {
   aspect-ratio: 1 / 0.9;
   font-size: 2rem;
   color: #fff;
+  position: relative;
+}
+
+.card-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.thumb-fallback {
+  font-weight: 800;
+  font-size: 2rem;
+  letter-spacing: 0.04em;
 }
 
 .project-card h3 {
@@ -1790,7 +1805,7 @@ html, body {
 
 .project-row {
   display: grid;
-  grid-template-columns: 170px 1fr auto;
+  grid-template-columns: minmax(130px, 170px) 1fr auto auto;
   gap: 10px;
   align-items: center;
   padding: 10px 12px;
@@ -1802,6 +1817,26 @@ html, body {
 
 .project-row.custom {
   border-color: rgba(245, 158, 11, 0.4);
+}
+
+.project-row.deleted {
+  opacity: 0.55;
+}
+
+.project-row.deleted span {
+  text-decoration: line-through;
+}
+
+.project-row .feat-toggle {
+  border-color: rgba(128, 128, 128, 0.4);
+  background: transparent;
+  color: rgba(128, 128, 128, 0.7);
+}
+
+.project-row .feat-toggle.active {
+  border-color: rgba(245, 158, 11, 0.65);
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
 }
 
 .add-proj-form {
@@ -1854,6 +1889,19 @@ html, body {
 
 .admin-projects {
   margin-bottom: 18px;
+}
+
+.deleted-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 10px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(225, 29, 72, 0.4);
+  color: rgba(225, 29, 72, 0.8);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .app-card {
