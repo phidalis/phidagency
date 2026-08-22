@@ -868,6 +868,61 @@ document.getElementById("btn-download").addEventListener("click", () => {
   URL.revokeObjectURL(a.href);
 });
 
+/* ---- publish built site to a public link (Cloudinary raw hosting) ---- */
+async function publishSiteHtml(html, name) {
+  const slug =
+    (name || "my-site").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") ||
+    "site";
+  const publicId = slug + "-" + Date.now().toString(36) + ".html";
+  const fd = new FormData();
+  fd.append(
+    "file",
+    new File([html], publicId, { type: "text/html" })
+  );
+  fd.append("upload_preset", UPLOAD_PRESET);
+  fd.append("public_id", publicId);
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/" + CLOUD_NAME + "/raw/upload",
+    { method: "POST", body: fd }
+  );
+  if (!res.ok) throw new Error("Publish failed");
+  const json = await res.json();
+  return "https://res.cloudinary.com/" + CLOUD_NAME + "/raw/upload/" + json.public_id;
+}
+
+const publishResult = document.getElementById("publish-result");
+const publishUrlInput = document.getElementById("publish-url");
+
+document.getElementById("btn-publish").addEventListener("click", async () => {
+  prepareBuild();
+  const btn = document.getElementById("btn-publish");
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publishing...';
+  try {
+    const url = await publishSiteHtml(buildSiteHTML(), site.name);
+    publishUrlInput.value = url;
+    publishResult.hidden = false;
+    if (currentId) {
+      setDoc(
+        doc(db, "studioSites", currentId),
+        { publishedUrl: url },
+        { merge: true }
+      ).catch(() => {});
+    }
+  } catch (e) {
+    alert("Publishing failed — please try again.");
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-globe"></i> Publish &amp; Get Link';
+});
+
+document.getElementById("publish-copy").addEventListener("click", () => {
+  navigator.clipboard.writeText(publishUrlInput.value).catch(() => {
+    publishUrlInput.select();
+    document.execCommand("copy");
+  });
+});
+
 /* ---- saved sites (Firestore) ---- */
 function deepClone(o) {
   return JSON.parse(JSON.stringify(o));
