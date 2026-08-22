@@ -56,6 +56,25 @@ async function uploadToCloudinary(file) {
   return json.secure_url;
 }
 
+/* ---- viewer for published studio sites: yourdomain#/s/<encoded-url> ---- */
+(function initPublishedSiteViewer() {
+  const m = location.hash.match(/^#\/s\/(.+)$/);
+  if (!m) return;
+  let target;
+  try {
+    target = decodeURIComponent(m[1]);
+  } catch {
+    return;
+  }
+  if (!/^https:\/\/res\.cloudinary\.com\//.test(target)) return;
+  document.title = "Built with Phidagency Studio";
+  const frame = document.createElement("iframe");
+  frame.style.cssText =
+    "position:fixed;inset:0;width:100%;height:100%;border:0;z-index:9999;background:#fff";
+  frame.src = target;
+  document.body.appendChild(frame);
+})();
+
 const intro = document.getElementById("intro");
 const content = document.getElementById("content");
 const video = document.getElementById("intro-video");
@@ -244,12 +263,36 @@ let step = 1;
 let currentId = null;
 
 const TYPE_META = {
-  business: { label: "Business", tagline: "Professional services that grow your brand" },
-  restaurant: { label: "Restaurant", tagline: "Delicious food, warm atmosphere" },
-  portfolio: { label: "Portfolio", tagline: "Creative work that speaks for itself" },
-  store: { label: "Online Store", tagline: "Quality products, fair prices" },
-  blog: { label: "Blog", tagline: "Stories, ideas and inspiration" },
-  event: { label: "Event", tagline: "Join us for an unforgettable day" },
+  business: {
+    label: "Business",
+    tagline: "Professional services that grow your brand",
+    palette: { bg: "#0f172a", text: "#f8fafc", accent: "#3b82f6" },
+  },
+  restaurant: {
+    label: "Restaurant",
+    tagline: "Delicious food, warm atmosphere",
+    palette: { bg: "#fdf6ec", text: "#3f2d20", accent: "#d97706" },
+  },
+  portfolio: {
+    label: "Portfolio",
+    tagline: "Creative work that speaks for itself",
+    palette: { bg: "#1e1b4b", text: "#eef2ff", accent: "#a78bfa" },
+  },
+  store: {
+    label: "Online Store",
+    tagline: "Quality products, fair prices",
+    palette: { bg: "#ffffff", text: "#111827", accent: "#e11d48" },
+  },
+  blog: {
+    label: "Blog",
+    tagline: "Stories, ideas and inspiration",
+    palette: { bg: "#0d1f17", text: "#ecfdf5", accent: "#22c55e" },
+  },
+  event: {
+    label: "Event",
+    tagline: "Join us for an unforgettable day",
+    palette: { bg: "#170b29", text: "#f5f3ff", accent: "#c084fc" },
+  },
 };
 
 function block(kind, extra) {
@@ -338,6 +381,15 @@ document.querySelectorAll(".type-card").forEach((cardBtn) => {
     cardBtn.classList.add("selected");
     site.type = cardBtn.dataset.type;
     site.blocks = [];
+    const meta = TYPE_META[site.type];
+    if (meta.palette) {
+      site.bg = meta.palette.bg;
+      site.text = meta.palette.text;
+      site.accent = meta.palette.accent;
+      document.getElementById("ws-bg").value = site.bg;
+      document.getElementById("ws-text").value = site.text;
+      document.getElementById("ws-accent").value = site.accent;
+    }
   });
 });
 
@@ -439,7 +491,10 @@ document.getElementById("hero-remove").addEventListener("click", () => {
 /* ---- canvas rendering ---- */
 function paintCanvas() {
   canvas.style.setProperty("--sa", site.accent);
-  canvas.style.background = site.bg;
+  canvas.style.background =
+    "linear-gradient(160deg," + hexRgba(site.accent, 0.1) + ",transparent 42%)," +
+    "radial-gradient(120% 90% at 50% -10%," + hexRgba(site.accent, 0.14) + ",transparent 55%)," +
+    site.bg;
   canvas.style.color = site.text;
   canvas.style.fontFamily =
     site.font === "serif"
@@ -474,6 +529,20 @@ function paintCanvas() {
   canvas.appendChild(hero);
 
   site.blocks.forEach((b) => canvas.appendChild(renderBlock(b)));
+  stripeCanvasBlocks();
+}
+
+function stripeCanvasBlocks() {
+  const blks = [...canvas.querySelectorAll(".blk")];
+  blks.forEach((el, i) => {
+    if (i % 2 === 0) {
+      el.style.background = hexRgba(site.text, 0.04);
+      el.style.borderRadius = "16px";
+      el.style.padding = "18px";
+    } else {
+      el.style.background = "transparent";
+    }
+  });
 }
 
 function renderBlock(b) {
@@ -660,6 +729,7 @@ document.querySelectorAll(".chip").forEach((chip) => {
     const nb = block(chip.dataset.kind);
     site.blocks.push(nb);
     canvas.insertBefore(renderBlock(nb), null);
+    stripeCanvasBlocks();
     canvas.scrollTop = canvas.scrollHeight;
   });
 });
@@ -784,7 +854,7 @@ site.domain
 "<style>",
 "*{margin:0;padding:0;box-sizing:border-box}",
 "html{scroll-behavior:smooth}",
-"body{background:" + site.bg + ";color:" + site.text + ";font-family:" + fonts[site.font] + ";line-height:1.6}",
+"body{background:linear-gradient(160deg," + hexRgba(site.accent, 0.1) + ",transparent 42%),radial-gradient(120% 90% at 50% -10%," + hexRgba(site.accent, 0.14) + ",transparent 55%)," + site.bg + ";color:" + site.text + ";font-family:" + fonts[site.font] + ";line-height:1.6;background-attachment:fixed}",
 ".wrap{max-width:1000px;margin:0 auto;padding:0 22px}",
 "nav{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 22px;border-bottom:1px solid " + hexRgba(site.text, 0.12) + ";background:" + hexRgba(site.bg, 0.82) + ";backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}",
 "nav b{font-size:1.15rem;letter-spacing:.02em;white-space:nowrap}",
@@ -798,7 +868,8 @@ site.domain
 ".hero p{opacity:.88;margin:12px auto 0;max-width:560px;font-size:1.08rem}",
 ".hero .s-btn{margin-top:26px}",
 "main{padding:10px 22px 50px}",
-"main section{margin-top:48px}",
+"main section{margin-top:48px;padding:26px;border-radius:16px;background:" + hexRgba(site.text, 0.035) + "}",
+"main section:nth-child(even){background:" + hexRgba(site.accent, 0.07) + "}",
 "h2{margin-bottom:12px;font-size:1.45rem}",
 "p{margin:10px 0}",
 "a.s-btn{display:inline-block;background:" + site.accent + ";color:#fff;padding:12px 28px;border-radius:10px;text-decoration:none;font-weight:600;transition:transform .25s,box-shadow .25s}",
@@ -887,7 +958,12 @@ async function publishSiteHtml(html, name) {
   );
   if (!res.ok) throw new Error("Publish failed");
   const json = await res.json();
-  return "https://res.cloudinary.com/" + CLOUD_NAME + "/raw/upload/" + json.public_id;
+  const rawUrl =
+    "https://res.cloudinary.com/" + CLOUD_NAME + "/raw/upload/" + json.public_id;
+  // shareable link starts with the domain the portfolio is hosted on
+  return (
+    location.origin + location.pathname + "#/s/" + encodeURIComponent(rawUrl)
+  );
 }
 
 const publishResult = document.getElementById("publish-result");

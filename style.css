@@ -1910,6 +1910,43 @@ body.admin-mode .site-footer {
   display: none;
 }
 
+/* ---------- Section background variety ---------- */
+.hero {
+  background:
+    radial-gradient(55% 70% at 78% 12%, rgba(59, 130, 246, 0.12), transparent 65%),
+    radial-gradient(45% 60% at 8% 85%, rgba(59, 130, 246, 0.07), transparent 60%);
+}
+
+.featured {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(128, 128, 128, 0.05) 40%,
+    rgba(59, 130, 246, 0.04)
+  );
+}
+
+.studio {
+  background: radial-gradient(
+    50% 45% at 50% 0%,
+    rgba(59, 130, 246, 0.06),
+    transparent 72%
+  );
+}
+
+.skills {
+  background: linear-gradient(
+    180deg,
+    rgba(59, 130, 246, 0.05),
+    rgba(59, 130, 246, 0.02)
+  );
+}
+
+.site-footer {
+  background:
+    linear-gradient(0deg, rgba(59, 130, 246, 0.05), transparent 60%);
+}
+
 .info-card a {
   color: inherit;
   text-decoration: none;
